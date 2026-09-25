@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOVO Essentials — Diagnóstico Estratégico Integral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Ralph Lauren Heritage & Purple Label Inspired Palette */
+    --rl-navy-deep: #050B14;
+    --rl-navy-dark: #0A1424;
+    --rl-navy-surface: #101E36;
+    --rl-navy-elevated: #162644;
+    
+    --rl-brass-gold: #C5A059;
+    --rl-brass-light: #E0C79B;
+    --rl-brass-muted: rgba(197, 160, 89, 0.35);
+    --rl-saddle-leather: #8B5A2B;
+    --rl-cognac: #9E6534;
+    
+    --rl-ivory: #F9F6F0;
+    --rl-parchment: #E6DFD3;
+    --rl-slate-muted: #8E9BAE;
+    
+    --rl-border: rgba(197, 160, 89, 0.2);
+    --rl-border-subtle: rgba(255, 255, 255, 0.07);
+    
+    --status-positive: #2E7D52;
+    --status-positive-light: #4EAA77;
+    --status-warning: #B87D28;
+    --status-warning-light: #DE9F43;
+    --status-danger: #9B2C2C;
+    --status-danger-light: #C54242;
+
+    --speaker-bigarny: #C5A059;
+    --speaker-saymond: #8B5A2B;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--rl-navy-deep);
+    color: var(--rl-ivory);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Heritage Architectural Pinstripe & Radial Atmosphere */
+  .pinstripe-overlay {
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(197, 160, 89, 0.08) 0%, transparent 55%),
+      radial-gradient(circle at 100% 100%, rgba(10, 20, 36, 0.8) 0%, transparent 60%),
+      linear-gradient(rgba(197, 160, 89, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(197, 160, 89, 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Header Bar */
+  .header-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: rgba(5, 11, 20, 0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--rl-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 44px;
+    z-index: 50;
+  }
+
+  .brand-crest {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .brand-monogram {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--rl-brass-light);
+    text-transform: uppercase;
+  }
+
+  .brand-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--rl-border);
+  }
+
+  .course-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--rl-slate-muted);
+    text-transform: uppercase;
+  }
+
+  .timer-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .timer-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--rl-navy-dark);
+    border: 1px solid var(--rl-border);
+    padding: 5px 14px;
+    border-radius: 2px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+    color: var(--rl-brass-light);
+  }
+
+  .timer-btn {
+    background: transparent;
+    border: 1px solid var(--rl-border);
+    color: var(--rl-parchment);
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .timer-btn:hover {
+    background: var(--rl-brass-gold);
+    color: var(--rl-navy-deep);
+    border-color: var(--rl-brass-gold);
+  }
+
+  /* Presentation Area */
+  .deck-viewport {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 112px);
+    margin-top: 56px;
+    overflow: hidden;
+    z-index: 2;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 64px 32px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+    overflow-y: auto;
+  }
+
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  /* Typography */
+  .eyebrow {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--rl-brass-gold);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before, .eyebrow::after {
+    content: "";
+    width: 18px;
+    height: 1px;
+    background: var(--rl-brass-gold);
+  }
+
+  .slide-heading {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(28px, 3.4vw, 46px);
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--rl-ivory);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .slide-desc {
+    font-size: 13.5px;
+    color: var(--rl-slate-muted);
+    font-weight: 400;
+    margin-bottom: 28px;
+    text-align: center;
+    max-width: 760px;
+    line-height: 1.5;
+  }
+
+  /* Speaker Badges */
+  .speaker-badge {
+    position: absolute;
+    top: 24px;
+    right: 48px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: var(--rl-navy-dark);
+    border: 1px solid var(--rl-border);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--rl-brass-light);
+  }
+
+  .speaker-badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: var(--rl-brass-gold);
+  }
+
+  /* Structural Frameworks */
+  .deck-container {
+    width: 100%;
+    max-width: 1140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .col-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    width: 100%;
+  }
+
+  .col-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    width: 100%;
+  }
+
+  /* Tailored Cards */
+  .heritage-card {
+    background: var(--rl-navy-surface);
+    border: 1px solid var(--rl-border-subtle);
+    padding: 22px 24px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .heritage-card:hover {
+    border-color: var(--rl-border);
+    background: var(--rl-navy-elevated);
+  }
+
+  .card-top-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--rl-brass-gold);
+  }
+
+  .card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--rl-brass-gold);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-text {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--rl-parchment);
+    font-weight: 400;
+  }
+
+  /* Key Metrics Strip */
+  .metrics-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+    margin-top: 18px;
+  }
+
+  .metric-box {
+    background: var(--rl-navy-dark);
+    border: 1px solid var(--rl-border);
+    padding: 16px 20px;
+    text-align: left;
+    border-left: 3px solid var(--rl-brass-gold);
+  }
+
+  .metric-number {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--rl-brass-light);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .metric-subtitle {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--rl-slate-muted);
+  }
+
+  /* Porter Stack */
+  .porter-container {
+    width: 100%;
+    max-width: 860px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .porter-row {
+    background: var(--rl-navy-surface);
+    border: 1px solid var(--rl-border-subtle);
+    padding: 12px 20px;
+    display: grid;
+    grid-template-columns: 230px 1fr 70px;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .porter-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--rl-ivory);
+  }
+
+  .porter-bar-rail {
+    height: 6px;
+    background: var(--rl-navy-deep);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .porter-bar-progress {
+    height: 100%;
+    background: var(--rl-brass-gold);
+    transition: width 0.8s ease-out;
+  }
+
+  .porter-bar-progress.danger {
+    background: var(--status-danger-light);
+  }
+
+  .porter-bar-progress.warning {
+    background: var(--status-warning-light);
+  }
+
+  .porter-bar-progress.positive {
+    background: var(--status-positive-light);
+  }
+
+  .porter-value {
+    font-size: 13px;
+    font-weight: 700;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* PESTEL 6-Box Grid */
+  .pestel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .pestel-card {
+    background: var(--rl-navy-surface);
+    border: 1px solid var(--rl-border-subtle);
+    padding: 16px 18px;
+    min-height: 136px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .pestel-topline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .pestel-name {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--rl-brass-light);
+  }
+
+  .pestel-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  .badge-danger {
+    background: rgba(197, 66, 66, 0.16);
+    color: #F87171;
+    border: 1px solid rgba(197, 66, 66, 0.35);
+  }
+
+  .badge-warning {
+    background: rgba(222, 159, 67, 0.16);
+    color: #FBBF24;
+    border: 1px solid rgba(222, 159, 67, 0.35);
+  }
+
+  .badge-positive {
+    background: rgba(78, 170, 119, 0.16);
+    color: #34D399;
+    border: 1px solid rgba(78, 170, 119, 0.35);
+  }
+
+  .pestel-description {
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--rl-parchment);
+  }
+
+  /* VRIO Bespoke Table */
+  .vrio-deck-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    text-align: left;
+  }
+
+  .vrio-deck-table th {
+    background: var(--rl-navy-dark);
+    color: var(--rl-brass-light);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--rl-border);
+  }
+
+  .vrio-deck-table td {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--rl-border-subtle);
+    color: var(--rl-parchment);
+    background: var(--rl-navy-surface);
+  }
+
+  .vrio-deck-table tr:hover td {
+    background: var(--rl-navy-elevated);
+  }
+
+  .cell-yes {
+    color: var(--status-positive-light);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .cell-no {
+    color: var(--status-danger-light);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .vrio-result-pill {
+    display: inline-block;
+    padding: 3px 9px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+
+  .vrio-result-pill.temp {
+    background: rgba(222, 159, 67, 0.15);
+    color: var(--status-warning-light);
+    border: 1px solid rgba(222, 159, 67, 0.3);
+  }
+
+  .vrio-result-pill.parity {
+    background: rgba(142, 155, 174, 0.1);
+    color: var(--rl-slate-muted);
+  }
+
+  /* FODA Matrix */
+  .foda-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .foda-compartment {
+    background: var(--rl-navy-surface);
+    border: 1px solid var(--rl-border-subtle);
+    padding: 18px 20px;
+    border-left: 3px solid var(--rl-brass-gold);
+  }
+
+  .foda-compartment.f-box { border-left-color: var(--status-positive-light); }
+  .foda-compartment.d-box { border-left-color: var(--status-danger-light); }
+  .foda-compartment.o-box { border-left-color: var(--rl-brass-gold); }
+  .foda-compartment.a-box { border-left-color: var(--status-warning-light); }
+
+  .foda-top {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .foda-items {
+    list-style: none;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--rl-parchment);
+  }
+
+  .foda-items li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 3px;
+  }
+
+  .foda-items li::before {
+    content: "▪";
+    position: absolute;
+    left: 0;
+    color: var(--rl-brass-gold);
+    font-size: 10px;
+  }
+
+  /* Matriz IE Grid */
+  .ie-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 36px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .ie-visual-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 72px);
+    gap: 6px;
+    background: var(--rl-navy-dark);
+    padding: 12px;
+    border: 1px solid var(--rl-border);
+  }
+
+  .ie-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--rl-navy-surface);
+    border: 1px solid var(--rl-border-subtle);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--rl-slate-muted);
+  }
+
+  .ie-cell.selected {
+    background: rgba(197, 160, 89, 0.18);
+    border: 1.5px solid var(--rl-brass-gold);
+    color: var(--rl-brass-light);
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.2);
+  }
+
+  .ie-cell-sub {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--rl-brass-gold);
+    margin-top: 2px;
+  }
+
+  /* Synthesis Statement */
+  .synthesis-card {
+    background: var(--rl-navy-surface);
+    border: 1px solid var(--rl-border);
+    padding: 26px 36px;
+    text-align: center;
+    max-width: 900px;
+    margin-bottom: 22px;
+    border-top: 2px solid var(--rl-brass-gold);
+  }
+
+  .synthesis-core {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--rl-ivory);
+    margin-bottom: 12px;
+  }
+
+  .synthesis-sub {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--rl-slate-muted);
+  }
+
+  /* Bottom Bar */
+  .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: rgba(5, 11, 20, 0.94);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--rl-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 44px;
+    z-index: 50;
+  }
+
+  .steps-tracker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .step-dash {
+    width: 28px;
+    height: 3px;
+    background: var(--rl-navy-surface);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .step-dash.active {
+    background: var(--rl-brass-gold);
+    width: 48px;
+  }
+
+  .controls-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-action-btn {
+    background: transparent;
+    border: 1px solid var(--rl-border);
+    color: var(--rl-parchment);
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s ease;
+  }
+
+  .nav-action-btn:hover {
+    background: var(--rl-navy-elevated);
+    border-color: var(--rl-brass-gold);
+    color: var(--rl-brass-light);
+  }
+
+  .progress-thin-line {
+    position: fixed;
+    top: 55px;
+    left: 0;
+    height: 2px;
+    background: var(--rl-brass-gold);
+    transition: width 0.35s ease;
+    z-index: 60;
+  }
+</style>
+</head>
+<body>
+
+<div class="pinstripe-overlay"></div>
+<div class="progress-thin-line" id="progressLine"></div>
+
+<!-- Top Executive Header -->
+<header class="header-bar">
+  <div class="brand-crest">
+    <span class="brand-monogram">LOVO ESSENTIALS</span>
+    <span class="brand-divider"></span>
+    <span class="course-title">Estrategia Empresarial · UAM 2026</span>
+  </div>
+  <div class="timer-container">
+    <div class="timer-pill" id="timerPill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="timerDisplay">00:00</span> / 07:00
+    </div>
+    <button class="timer-btn" onclick="toggleTimer()" id="timerControl">Iniciar</button>
+  </div>
+</header>
+
+<main class="deck-viewport">
+
+  <!-- SLIDE 0: CARÁTULA EJECUTIVA -->
+  <section class="slide active" id="slide-0">
+    <div class="deck-container" style="text-align: center;">
+      <div class="eyebrow">Universidad Americana · Primer Corte Evaluativo</div>
+      <h1 class="slide-heading" style="font-size: clamp(34px, 4.4vw, 56px); margin-bottom: 14px;">DIAGNÓSTICO ESTRATÉGICO INTEGRAL</h1>
+      <p class="slide-desc" style="font-size: 15px; color: var(--rl-brass-light); margin-bottom: 34px;">
+        Evaluación de Posicionamiento, Atractivo de Industria y Capacidades Organizacionales
+      </p>
+
+      <div class="col-2" style="max-width: 680px; margin-bottom: 34px;">
+        <div class="heritage-card" style="text-align: left;">
+          <div class="card-top-accent"></div>
+          <div class="card-label">Equipo Consultor</div>
+          <div class="card-text" style="color: var(--rl-ivory); font-weight: 500;">
+            Bigarny Gutiérrez<br>
+            Saymond Montoya
+          </div>
+        </div>
+
+        <div class="heritage-card" style="text-align: left;">
+          <div class="card-top-accent"></div>
+          <div class="card-label">Cátedra & Facultad</div>
+          <div class="card-text">
+            Facultad de Ingeniería y Arquitectura<br>
+            Cátedra: Prof. David Rodríguez L.
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size: 11px; letter-spacing: 2px; color: var(--rl-slate-muted); text-transform: uppercase;">
+        Navegación mediante teclas <span style="color:var(--rl-brass-light); font-weight:700;">[ ← ] [ → ]</span> o controles inferiores
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 1: MODELO DE NEGOCIO -->
+  <section class="slide" id="slide-1">
+    <div class="speaker-badge">Bloque 1 · Bigarny (1:00)</div>
+    <div class="deck-container">
+      <div class="eyebrow">Modelo de Negocio & Contexto</div>
+      <h2 class="slide-heading">LOVO ESSENTIALS</h2>
+      <p class="slide-desc">Boutique multimarca orientada al segmento premium y de diseñador en Managua</p>
+
+      <div class="col-3">
+        <div class="heritage-card">
+          <div class="card-top-accent"></div>
+          <div class="card-label">Propuesta de Valor</div>
+          <p class="card-text">
+            Comercialización de prendas y accesorios 100% auténticos de marcas internacionales de diseñador, adquiridos en tiendas oficiales y outlets de EE. UU.
+          </p>
+        </div>
+
+        <div class="heritage-card">
+          <div class="card-top-accent"></div>
+          <div class="card-label">Segmento Objetivo</div>
+          <p class="card-text">
+            Consumidores urbanos de nivel socioeconómico medio y medio-alto que valoran la autenticidad comprobada, curaduría de estilo y atención personalizada.
+          </p>
+        </div>
+
+        <div class="heritage-card">
+          <div class="card-top-accent"></div>
+          <div class="card-label">Canales de Venta</div>
+          <p class="card-text">
+            Comercio social activo (18,000+ seguidores), ventas en vivo con alta interacción, showroom privado bajo cita y entrega express en 24 horas en Managua.
+          </p>
+        </div>
+      </div>
+
+      <div class="metrics-strip">
+        <div class="metric-box">
+          <div class="metric-number">4.30 <span style="font-size:16px; color:var(--rl-slate-muted);">/ 5.0</span></div>
+          <div class="metric-subtitle">Matriz de Selección Empresarial</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-number">18,000+</div>
+          <div class="metric-subtitle">Comunidad Digital Comprometida</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-number">&lt; 24h</div>
+          <div class="metric-subtitle">Plazo de Despacho Casco Urbano</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: PESTEL -->
+  <section class="slide" id="slide-2">
+    <div class="speaker-badge">Bloque 2 · Saymond (1:15)</div>
+    <div class="deck-container">
+      <div class="eyebrow">Auditoría del Macroentorno</div>
+      <h2 class="slide-heading">ANÁLISIS PESTEL</h2>
+      <p class="slide-desc">Entorno general moderadamente favorable: impulso social y digital frente a exposición arancelaria y macroeconómica</p>
+
+      <div class="pestel-grid">
+        <div class="pestel-card">
+          <div class="pestel-topline">
+            <span class="pestel-name">Político</span>
+            <span class="pestel-badge badge-danger">Amenaza (4)</span>
+          </div>
+          <p class="pestel-description">Incertidumbre regulatoria y controles fronterizos que inciden sobre la frecuencia de viajes de compra a EE. UU. y el despacho aduanero.</p>
+        </div>
+
+        <div class="pestel-card">
+          <div class="pestel-topline">
+            <span class="pestel-name">Económico</span>
+            <span class="pestel-badge badge-warning">Mixto (4)</span>
+          </div>
+          <p class="pestel-description">El flujo sostenido de remesas apuntala el gasto discrecional, pero una desaceleración contraería de inmediato el consumo de marcas de lujo accesible.</p>
+        </div>
+
+        <div class="pestel-card">
+          <div class="pestel-topline">
+            <span class="pestel-name">Social</span>
+            <span class="pestel-badge badge-positive">Oportunidad (4)</span>
+          </div>
+          <p class="pestel-description">Marcada aspiración por vestimenta de prestigio y consolidación del hábito de compra por redes sociales en segmentos jóvenes y profesionales.</p>
+        </div>
+
+        <div class="pestel-card">
+          <div class="pestel-topline">
+            <span class="pestel-name">Tecnológico</span>
+            <span class="pestel-badge badge-warning">Mixto (3.5)</span>
+          </div>
+          <p class="pestel-description">Comercio conversacional altamente efectivo, compensado por la amenaza de plataformas transfronterizas masivas (Shein, Temu, Amazon).</p>
+        </div>
+
+        <div class="pestel-card">
+          <div class="pestel-topline">
+            <span class="pestel-name">Ecológico</span>
+            <span class="pestel-badge badge-positive">Oportunidad (2)</span>
+          </div>
+          <p class="pestel-description">Revalorización de prendas duraderas sobre la moda rápida descartable; oportunidad para líneas secundarias certificadas de reventa.</p>
+        </div>
+
+        <div class="pestel-card">
+          <div class="pestel-topline">
+            <span class="pestel-name">Legal</span>
+            <span class="pestel-badge badge-danger">Amenaza (4)</span>
+          </div>
+          <p class="pestel-description">Aranceles e IVA (15%) en Dirección General de Aduanas determinan el costo desembarcado. La Ley 380 de Marcas exige estricta trazabilidad de facturas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: PORTER -->
+  <section class="slide" id="slide-3">
+    <div class="speaker-badge">Bloque 3 · Saymond (1:15)</div>
+    <div class="deck-container">
+      <div class="eyebrow">Diagnóstico Estructural de la Industria</div>
+      <h2 class="slide-heading">5 FUERZAS DE PORTER</h2>
+      <p class="slide-desc">Atractivo industrial Bajo a Medio-Bajo (3.9 / 5.0) — La rentabilidad exige diferenciación pura, no liderazgo en costos</p>
+
+      <div class="porter-container">
+        <div class="porter-row">
+          <span class="porter-name">Rivalidad de Competidores</span>
+          <div class="porter-bar-rail"><div class="porter-bar-progress danger" style="width: 90%;"></div></div>
+          <span class="porter-value" style="color:var(--status-danger-light);">4.5 / 5</span>
+        </div>
+
+        <div class="porter-row">
+          <span class="porter-name">Presión de Productos Sustitutos</span>
+          <div class="porter-bar-rail"><div class="porter-bar-progress danger" style="width: 90%;"></div></div>
+          <span class="porter-value" style="color:var(--status-danger-light);">4.5 / 5</span>
+        </div>
+
+        <div class="porter-row">
+          <span class="porter-name">Poder de Negociación del Cliente</span>
+          <div class="porter-bar-rail"><div class="porter-bar-progress danger" style="width: 80%;"></div></div>
+          <span class="porter-value" style="color:var(--status-danger-light);">4.0 / 5</span>
+        </div>
+
+        <div class="porter-row">
+          <span class="porter-name">Amenaza de Nuevos Entrantes</span>
+          <div class="porter-bar-rail"><div class="porter-bar-progress danger" style="width: 80%;"></div></div>
+          <span class="porter-value" style="color:var(--status-danger-light);">4.0 / 5</span>
+        </div>
+
+        <div class="porter-row">
+          <span class="porter-name">Poder de Proveedores</span>
+          <div class="porter-bar-rail"><div class="porter-bar-progress positive" style="width: 50%;"></div></div>
+          <span class="porter-value" style="color:var(--status-positive-light);">2.5 / 5</span>
+        </div>
+      </div>
+
+      <div class="heritage-card" style="margin-top: 18px; width: 100%; max-width: 860px; border-left: 3px solid var(--rl-brass-gold);">
+        <p class="card-text" style="color: var(--rl-ivory);">
+          <strong>Conclusión Estratégica:</strong> Cuatro de las cinco fuerzas operan en niveles críticos. Competir por precio provocaría destrucción de margen frente a pacas o importaciones informales. El único posicionamiento viable es <strong>diferenciación enfocada</strong>, cimentada en autenticidad irrefutable y servicio de alta confianza.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: CADENA DE VALOR -->
+  <section class="slide" id="slide-4">
+    <div class="speaker-badge">Bloque 4 · Bigarny (1:30)</div>
+    <div class="deck-container">
+      <div class="eyebrow">Diagnóstico Operativo Interno</div>
+      <h2 class="slide-heading">CADENA DE VALOR</h2>
+      <p class="slide-desc">Desconexión operativa: El valor se genera en los extremos y se erosiona en el núcleo de inventario</p>
+
+      <div class="col-3">
+        <div class="heritage-card">
+          <div class="card-top-accent" style="background:var(--status-positive-light);"></div>
+          <div class="card-label" style="color:var(--status-positive-light);">Logística de Entrada</div>
+          <div style="font-size: 11px; font-weight: 700; color: var(--rl-brass-light); margin-bottom: 6px;">COMPRA ESTRATÉGICA EN EE. UU.</div>
+          <p class="card-text">
+            Captura metódica de promociones y liquidaciones en outlets autorizados. Excelente costo unitario de adquisición y garantía de originalidad.
+          </p>
+          <div style="margin-top: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--status-positive-light);">FORTALEZA CLAVE</div>
+        </div>
+
+        <div class="heritage-card">
+          <div class="card-top-accent" style="background:var(--status-danger-light);"></div>
+          <div class="card-label" style="color:var(--status-danger-light);">Operaciones Internas</div>
+          <div style="font-size: 11px; font-weight: 700; color: var(--rl-brass-light); margin-bottom: 6px;">CONTROL DE STOCK & TALLAS</div>
+          <p class="card-text">
+            Inexistencia de un software formal para administración de existencias. Registro manual en notas y chats, causando descalce de tallas y ventas duplicadas.
+          </p>
+          <div style="margin-top: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--status-danger-light);">DEBILIDAD OPERATIVA</div>
+        </div>
+
+        <div class="heritage-card">
+          <div class="card-top-accent" style="background:var(--status-positive-light);"></div>
+          <div class="card-label" style="color:var(--status-positive-light);">Comercialización & Posventa</div>
+          <div style="font-size: 11px; font-weight: 700; color: var(--rl-brass-light); margin-bottom: 6px;">CURADURÍA & ATENCIÓN DIRECTA</div>
+          <p class="card-text">
+            Presentación visual refinada en catálogos, asesoría de imagen por WhatsApp, certificados con factura original y esquema de abonos y apartados.
+          </p>
+          <div style="margin-top: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--status-positive-light);">FORTALEZA CLAVE</div>
+        </div>
+      </div>
+
+      <div class="heritage-card" style="width: 100%; margin-top: 18px; text-align: center;">
+        <p class="card-text" style="color: var(--rl-slate-muted);">
+          <strong style="color:var(--rl-brass-light);">Vulnerabilidad de Infraestructura:</strong> Concentración de decisiones directivas en la fundadora, ausencia de cálculo de costo desembarcado por SKU y subutilización del talento técnico en analítica interna.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: VRIO -->
+  <section class="slide" id="slide-5">
+    <div class="speaker-badge">Bloque 4 (Cont.) · Bigarny</div>
+    <div class="deck-container">
+      <div class="eyebrow">Auditoría de Recursos & Capacidades</div>
+      <h2 class="slide-heading">MATRIZ VRIO</h2>
+      <p class="slide-desc">Brecha de Organización: Los recursos diferenciales generan únicamente ventajas temporales</p>
+
+      <div style="width: 100%; overflow: hidden; border: 1px solid var(--rl-border);">
+        <table class="vrio-deck-table">
+          <thead>
+            <tr>
+              <th>Recurso o Capacidad Estratégica</th>
+              <th style="text-align:center;">Valioso (V)</th>
+              <th style="text-align:center;">Raro (R)</th>
+              <th style="text-align:center;">Inimitable (I)</th>
+              <th style="text-align:center;">Organizado (O)</th>
+              <th>Estatus Competitivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Reputación de Autenticidad</strong> (respaldo documental)</td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-no">No</td>
+              <td><span class="vrio-result-pill temp">Ventaja Temporal</span></td>
+            </tr>
+            <tr>
+              <td><strong>Curaduría Estética y Detección de Tendencias</strong></td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-no">No</td>
+              <td><span class="vrio-result-pill temp">Ventaja Temporal</span></td>
+            </tr>
+            <tr>
+              <td><strong>Comunidad Fiel de Clientes</strong> (18,000 seguidores)</td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-no">No</td>
+              <td><span class="vrio-result-pill temp">Ventaja Temporal</span></td>
+            </tr>
+            <tr>
+              <td><strong>Canal de Compras en Tiendas y Outlets de EE. UU.</strong></td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-no">No</td>
+              <td class="cell-no">No</td>
+              <td class="cell-yes">Sí</td>
+              <td><span class="vrio-result-pill parity">Paridad Competitiva</span></td>
+            </tr>
+            <tr>
+              <td><strong>Competencias Técnicas en Analítica de Datos</strong></td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-yes">Sí</td>
+              <td class="cell-no">No</td>
+              <td class="cell-no">No</td>
+              <td><span class="vrio-result-pill temp">Ventaja Temporal</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="heritage-card" style="margin-top: 16px; width: 100%; border-left: 3px solid var(--status-warning-light);">
+        <p class="card-text">
+          <strong style="color:var(--rl-ivory);">Diagnóstico VRIO:</strong> Cinco recursos cumplen con ser valiosos y escasos, pero la carencia de sistemas y procesos estandarizados (la "O" de Organización) impide protegerlos contra la erosión competitiva a largo plazo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: FODA & AUDITORÍA EFI / EFE -->
+  <section class="slide" id="slide-6">
+    <div class="speaker-badge">Bloque 5 · Saymond (1:00)</div>
+    <div class="deck-container">
+      <div class="eyebrow">Diagnóstico Cuantitativo</div>
+      <h2 class="slide-heading">MATRIZ FODA & PONDERACIONES</h2>
+      <p class="slide-desc">Auditoría Interna (EFI: 2.54) frente a Respuesta al Entorno (EFE: 2.64)</p>
+
+      <div class="foda-grid">
+        <div class="foda-compartment f-box">
+          <div class="foda-top" style="color:var(--status-positive-light);">
+            <span>Fortalezas Internas</span>
+            <span style="opacity:0.8;">Ponderación: 1.48</span>
+          </div>
+          <ul class="foda-items">
+            <li>Autenticidad verificable con factura de origen.</li>
+            <li>Curaduría de moda con alto engagement digital.</li>
+            <li>Servicio personalizado con plan de apartado.</li>
+            <li>Competencias de análisis técnico sin explotar.</li>
+          </ul>
+        </div>
+
+        <div class="foda-compartment d-box">
+          <div class="foda-top" style="color:var(--status-danger-light);">
+            <span>Debilidades Internas</span>
+            <span style="opacity:0.8;">Ponderación: 1.06</span>
+          </div>
+          <ul class="foda-items">
+            <li>Carencia de software para inventario y tallas.</li>
+            <li>Toma de decisiones concentrada en la fundadora.</li>
+            <li>Ausencia de cálculo de costo desembarcado.</li>
+            <li>Vulnerabilidad logística por casillero único.</li>
+          </ul>
+        </div>
+
+        <div class="foda-compartment o-box">
+          <div class="foda-top" style="color:var(--rl-brass-light);">
+            <span>Oportunidades Externas</span>
+            <span style="opacity:0.8;">Ponderación: 1.52</span>
+          </div>
+          <ul class="foda-items">
+            <li>Expansión del comercio digital conversacional.</li>
+            <li>Despliegue de catálogo web con pasarela de pago.</li>
+            <li>Mercado corporativo para fechas comerciales clave.</li>
+            <li>Línea complementaria de precio de entrada.</li>
+          </ul>
+        </div>
+
+        <div class="foda-compartment a-box">
+          <div class="foda-top" style="color:var(--status-warning-light);">
+            <span>Amenazas Externas</span>
+            <span style="opacity:0.8;">Ponderación: 1.12</span>
+          </div>
+          <ul class="foda-items">
+            <li>Proliferación de sustitutos informales y pacas.</li>
+            <li>Contracción del gasto familiar por caída de remesas.</li>
+            <li>Trámites arancelarios y demoras en aduana (DGA).</li>
+            <li>Bajas barreras de entrada para revendedores en redes.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-2" style="max-width: 540px; margin-top: 14px;">
+        <div class="metric-box" style="text-align:center;">
+          <div class="metric-number">2.54</div>
+          <div class="metric-subtitle">Puntuación Total EFI (Interno)</div>
+        </div>
+        <div class="metric-box" style="text-align:center;">
+          <div class="metric-number">2.64</div>
+          <div class="metric-subtitle">Puntuación Total EFE (Externo)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: MATRIZ INTERNA-EXTERNA (IE) -->
+  <section class="slide" id="slide-7">
+    <div class="speaker-badge">Bloque 5 (Cont.) · Saymond</div>
+    <div class="deck-container">
+      <div class="eyebrow">Direccionamiento Corporativo</div>
+      <h2 class="slide-heading">MATRIZ INTERNA-EXTERNA (IE)</h2>
+      <p class="slide-desc">Posición Resultante: Cuadrante V (Conservar y Mantener)</p>
+
+      <div class="ie-layout">
+        <div>
+          <div class="ie-visual-board">
+            <div class="ie-cell">I</div>
+            <div class="ie-cell">II</div>
+            <div class="ie-cell">III</div>
+            <div class="ie-cell">IV</div>
+            <div class="ie-cell selected">
+              V
+              <span class="ie-cell-sub">LOVO</span>
+            </div>
+            <div class="ie-cell">VI</div>
+            <div class="ie-cell">VII</div>
+            <div class="ie-cell">VIII</div>
+            <div class="ie-cell">IX</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--rl-slate-muted); margin-top:8px;">
+            <span>EFI: Promedio (2.54)</span>
+            <span>EFE: Medio (2.64)</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="heritage-card">
+            <div class="card-top-accent"></div>
+            <div class="card-label">Mandato: Conservar & Mantener</div>
+            <p class="card-text">
+              La firma no requiere maniobras defensivas de desinversión ni una expansión desordenada. Debe consolidar su rentabilidad interna y proteger su capital de trabajo.
+            </p>
+          </div>
+
+          <div class="heritage-card">
+            <div class="card-label" style="color:var(--rl-brass-light);">Estrategia 1: Penetración de Mercado</div>
+            <p class="card-text">
+              Digitalización del catálogo con carrito de compras, pop-ups trimestrales en Managua y paquetes de regalos para cuentas corporativas.
+            </p>
+          </div>
+
+          <div class="heritage-card">
+            <div class="card-label" style="color:var(--rl-brass-light);">Estrategia 2: Desarrollo de Productos</div>
+            <p class="card-text">
+              Creación de kits temáticos de temporada y una línea de precio de entrada para optimizar el costo de adquisición de nuevos compradores.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: SÍNTESIS & CIERRE -->
+  <section class="slide" id="slide-8">
+    <div class="speaker-badge">Bloque 6 · Bigarny (1:00)</div>
+    <div class="deck-container">
+      <div class="eyebrow">Conclusiones & Hoja de Ruta</div>
+      <h2 class="slide-heading">SÍNTESIS ESTRATÉGICA</h2>
+      <p class="slide-desc">Directrices rectoras para la formulación de los siguientes avances</p>
+
+      <div class="synthesis-card">
+        <div class="synthesis-core">
+          "LOVO Essentials cuenta con una propuesta de valor validada por su mercado, pero sus capacidades no están estructuradas organizativamente para defender el margen bruto."
+        </div>
+        <div class="synthesis-sub">
+          <strong>Pregunta Estratégica Rectora:</strong> ¿Cómo transformar la credibilidad de autenticidad en una ventaja competitiva sostenible y rentable, cuando la falta de control de inventario y la dependencia de un solo canal de importación erosionan la rentabilidad?
+        </div>
+      </div>
+
+      <div class="col-3" style="margin-bottom: 22px;">
+        <div class="heritage-card" style="text-align: center;">
+          <div class="card-label" style="justify-content:center;">Postura Genérica</div>
+          <p class="card-text">Diferenciación enfocada en originalidad comprobada y atención exclusiva.</p>
+        </div>
+
+        <div class="heritage-card" style="text-align: center;">
+          <div class="card-label" style="justify-content:center; color:var(--status-positive-light);">Acción Operativa Inmediata</div>
+          <p class="card-text">Software de inventario en tiempo real, costeo landed por SKU y clasificación ABC.</p>
+        </div>
+
+        <div class="heritage-card" style="text-align: center;">
+          <div class="card-label" style="justify-content:center; color:var(--rl-brass-light);">Insumo al 2º Avance</div>
+          <p class="card-text">Objetivos estratégicos SMART, Matriz QSPM y estructura de Balanced Scorecard.</p>
+        </div>
+      </div>
+
+      <div style="font-family:'Cormorant Garamond', Georgia, serif; font-size:16px; letter-spacing:2px; color:var(--rl-brass-light); text-transform:uppercase;">
+        Agradecemos su atención · Apertura a preguntas de la Cátedra
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Bottom Executive Bar -->
+<footer class="footer-bar">
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div class="steps-tracker" id="stepsTracker"></div>
+    <span style="font-size:11px; font-weight:600; letter-spacing:1px; color:var(--rl-slate-muted); font-variant-numeric: tabular-nums;" id="slideNumber">1 / 9</span>
+  </div>
+
+  <div class="controls-group">
+    <button class="nav-action-btn" onclick="prevSlide()" title="Retroceder [←]">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Anterior
+    </button>
+    <button class="nav-action-btn" onclick="nextSlide()" title="Avanzar [→]">
+      Siguiente
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <button class="nav-action-btn" onclick="toggleFullscreen()" title="Pantalla Completa [F]">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    </button>
+  </div>
+</footer>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  let currentIdx = 0;
+
+  // Timer variables
+  let timerInterval = null;
+  let timerSecs = 0;
+  const targetSeconds = 7 * 60; // 7 minutes target
+  let isTimerActive = false;
+
+  // Build steps
+  const trackerEl = document.getElementById('stepsTracker');
+  for (let i = 0; i < totalSlides; i++) {
+    const dash = document.createElement('div');
+    dash.className = 'step-dash' + (i === 0 ? ' active' : '');
+    dash.onclick = () => showSlide(i);
+    trackerEl.appendChild(dash);
+  }
+
+  function renderSlideUI() {
+    slides.forEach((s, idx) => {
+      s.classList.toggle('active', idx === currentIdx);
+    });
+
+    document.querySelectorAll('.step-dash').forEach((dash, idx) => {
+      dash.classList.toggle('active', idx === currentIdx);
+    });
+
+    document.getElementById('slideNumber').textContent = `${currentIdx + 1} / ${totalSlides}`;
+    const pct = (currentIdx / (totalSlides - 1)) * 100;
+    document.getElementById('progressLine').style.width = `${pct}%`;
+  }
+
+  function showSlide(index) {
+    if (index < 0 || index >= totalSlides) return;
+    currentIdx = index;
+    renderSlideUI();
+  }
+
+  function nextSlide() {
+    if (currentIdx < totalSlides - 1) {
+      showSlide(currentIdx + 1);
+    }
+  }
+
+  function prevSlide() {
+    if (currentIdx > 0) {
+      showSlide(currentIdx - 1);
+    }
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevSlide();
+    } else if (e.key === 'f' || e.key === 'F') {
+      toggleFullscreen();
+    }
+  });
+
+  // Fullscreen
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+
+  // Timer logic
+  function toggleTimer() {
+    const control = document.getElementById('timerControl');
+    const pill = document.getElementById('timerPill');
+
+    if (!isTimerActive) {
+      isTimerActive = true;
+      control.textContent = 'Pausar';
+      timerInterval = setInterval(() => {
+        timerSecs++;
+        const m = Math.floor(timerSecs / 60).toString().padStart(2, '0');
+        const s = (timerSecs % 60).toString().padStart(2, '0');
+        document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+
+        if (timerSecs >= targetSeconds) {
+          pill.style.borderColor = 'var(--status-danger-light)';
+          pill.style.color = '#F87171';
+        }
+      }, 1000);
+    } else {
+      isTimerActive = false;
+      control.textContent = 'Reanudar';
+      clearInterval(timerInterval);
+    }
+  }
+
+  // Initialize
+  renderSlideUI();
+</script>
+</body>
+</html>
