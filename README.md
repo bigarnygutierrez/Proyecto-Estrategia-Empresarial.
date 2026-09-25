@@ -1,6 +1,7 @@
 # Proyecto de Estrategia Empresarial — LOVO Essentials
 
 **Universidad Americana (UAM)** · Estrategia Empresarial · Prof. David Rodríguez
+
 **Integrantes:** Bigarny Gutiérrez y Saymond Montoya
 
 ## Empresa
